@@ -30,11 +30,12 @@ jobs:
       - name: Prepare content (strip personal sections)
         run: python3 .github/prepare_content.py quartz/content
 
-      - name: Install deps and build
+      - name: Install deps, set baseUrl and build
         run: |
           cd quartz
           npm ci || npm install
-          npx quartz build --base "/${{ github.event.repository.name }}"
+          sed -i 's|baseUrl: ".*"|baseUrl: "guionardo.github.io/${{ github.event.repository.name }}"|' quartz.config.ts
+          npx quartz build
 
       - uses: actions/upload-pages-artifact@v3
         with:
